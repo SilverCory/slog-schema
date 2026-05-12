@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package example.v1;
+
+option go_package = "github.com/silvercory/slog-schema/example/protobuf;protobuf";
+
+import "google/protobuf/timestamp.proto";
+import "slogschema/v1/options.proto";
+
+message User {
+  uint64 id           = 1 [(slogschema.v1.field) = {hashed: true, omitempty: true}];
+  string email        = 2 [(slogschema.v1.field) = {hashed: true}];
+  string display_name = 3 [(slogschema.v1.field) = {name: "name"}];
+  string phone        = 4 [(slogschema.v1.field) = {hashed: true, omitempty: true}];
+  string role         = 5;
+  string password_hash = 6 [(slogschema.v1.field) = {skip: true}];
+
+  google.protobuf.Timestamp created_at = 7;
+  Address address = 8 [(slogschema.v1.field) = {omitempty: true}];
+
+  oneof notification_method {
+    string notify_email = 9;
+    string notify_sms   = 10;
+  }
+}
+
+message Address {
+  string street  = 1;
+  string city    = 2;
+  string country = 3 [(slogschema.v1.field) = {name: "country_code"}];
+}
