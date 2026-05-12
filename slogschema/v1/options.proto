@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package slogschema.v1;
+
+option go_package = "github.com/silvercory/slog-schema/slogschema/v1;slogschema";
+
+import "google/protobuf/descriptor.proto";
+
+// FieldOptions holds the slogschema annotations for a proto field.
+message FieldOptions {
+  // name overrides the slog attribute key.
+  string name = 1;
+  // hashed replaces the field value with its SHA-256 digest before logging.
+  bool hashed = 2;
+  // omitempty omits the field when it holds a zero value.
+  bool omitempty = 3;
+  // skip excludes this field from the generated MarshalSLog output entirely.
+  bool skip = 4;
+}
+
+extend google.protobuf.FieldOptions {
+  FieldOptions field = 77148;
+}
+
+// MessageOptions holds the slogschema message-level annotation.
+message MessageOptions {
+  // default_skip causes all fields to be skipped unless they carry an explicit
+  // slogschema field annotation.
+  bool default_skip = 1;
+}
+
+extend google.protobuf.MessageOptions {
+  MessageOptions message = 77148;
+}
