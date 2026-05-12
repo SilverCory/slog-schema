@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  packages: write
 
 jobs:
   release:
@@ -91,37 +90,3 @@ jobs:
         with:
           files: dist/*
           generate_release_notes: true
-
-  buf-publish:
-    name: Publish to Buf Schema Registry
-    needs: publish
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Log in to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push plugin image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/silvercory/slog-schema/protoc-gen-slogschema:${{ github.ref_name }}
-
-      - name: Install buf
-        uses: bufbuild/buf-action@v1
-        with:
-          token: ${{ secrets.BUF_TOKEN }}
-          setup_only: true
-
-      - name: Push plugin to BSR
-        env:
-          VERSION: ${{ github.ref_name }}
-        run: |
-          sed -i "s/\${VERSION}/${VERSION}/" buf.plugin.yaml
-          buf beta registry plugin push --visibility public --image ghcr.io/silvercory/slog-schema/protoc-gen-slogschema:${VERSION}

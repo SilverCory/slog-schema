@@ -1,7 +1,0 @@
-version: v1
-name: buf.build/slog-schema/slogschema
-plugin_version: ${VERSION}
-source_url: https://github.com/silvercory/slog-schema
-description: Generates MarshalSLog() methods on protoc-gen-go message types for structured logging with slog-schema.
-output_languages:
-  - go
